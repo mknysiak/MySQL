@@ -211,3 +211,6 @@ select *,
 	round(avg(avg_height) over (partition by decade)) decade_avg_height
 from decade
 order by debut asc;
+
+drop table(country_stats, customers, happiness_scores, happiness_scores_current, 
+inflation_rates, orders, products);
