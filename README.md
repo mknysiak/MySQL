@@ -42,8 +42,6 @@ from number;
 ```
 As we can see above, the number of schools producing MLB players has generally increased over the decades, with a peak in the 1991-2000 decade. However, there is a noticeable drop in the 2011-2020 decade, because the data for this decade is incomplete.
 
-<p align="center">
-
 | Number of Schools | Decade    |
 | ------------- | --------- |
 | 2             | 1861-1870 |
@@ -63,13 +61,8 @@ As we can see above, the number of schools producing MLB players has generally i
 | 1076          | 2001-2010 |
 | 33            | 2011-2020 |
 
- </p>
-
-<center>
-
 *Numbers of school in each decade where players attended*
 
-</center>
 
 The second question I decided to answer was:
 *What are the top 5 schools that produced the most MLB players for the entire dataset?*.
@@ -85,8 +78,6 @@ limit 5;
 
 The University of Texas at Austin leads with 107 players, closely followed by the University of Southern California with 105 players. Arizona State University also has a significant contribution with 101 players. These institutions have been particularly successful in nurturing talent that progresses to Major League Baseball.
 
-<p align="center">
-
 | School                       |   Number of Players|
 |:----------------------------------|----------------:|
 | University of Texas at Austin     |             107 |
@@ -95,11 +86,7 @@ The University of Texas at Austin leads with 107 players, closely followed by th
 | Stanford University               |              86 |
 | University of Michigan            |              76 |
 
- </p>
-
-<center>
-
 *Top 5 schools that produced the most MLB players for the entire dataset*
 
-</center>
+
 
