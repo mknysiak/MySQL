@@ -1,4 +1,4 @@
-# Introduction
+## Introduction
 I'm thrilled to share my latest SQL project analyzing Major League Baseball (MLB) data ⚾. The project explores four key areas: school and player demographics, salary trends, player career longevity, and physical characteristics. I chose this dataset to move beyond basic joins and practice more advanced SQL techniques, such as window functions and complex subqueries, to answer questions like:
 
 1. How has the average player's height and weight changed over the decades?
@@ -7,17 +7,19 @@ I'm thrilled to share my latest SQL project analyzing Major League Baseball (MLB
 
 This project was a fantastic way to apply my skills to a rich, real-world dataset and uncover some truly interesting insights. Looking forward to sharing my findings!
 
-SQL code to check answers on above queries by clicking here: [Baseball Players](https://github.com/mknysiak/MySQL/blob/main/MySQL_Project.sql)  
+SQL code to check answers on above queries available by clicking here: [Baseball Players](https://github.com/mknysiak/MySQL/blob/main/MySQL_Project.sql)  
 
-# Tools which were used
+## Tools which were used
 Below are listed tools which were used to find out the answers on above questions:
 
 - ⚙️**MySQL Server/Workbench:** This was my chosen environment for storing and managing the database, providing a robust platform for efficient data manipulation.
 - 💻**Visual Studio Code:** Used this IDE to write and manage my SQL scripts, seamlessly integrating with Git for version control.
 - 🌐**Git & GitHub:** These platforms were essential for managing project versions, documenting my process, and making the entire codebase publicly accessible for transparency and future reference.
 
-# Analysis
+## Analysis
+Lets dive into the analysis and findings from the MLB dataset. This section is divided into three main parts, each addressing a specific aspect of the data. First, we'll explore the demographics of schools and players. Next, we'll analyze salary trends over the years. Finally, we'll look into player career longevity and physical characteristics.
 
+### Schools and Players Demographics
 🏫First of all, I wanted to find out how many schools produced MLB players in each decade. As table consisted of PlayerID and SchoolID was used many times, decided to create a Temporary Table.
 
 ```sql
@@ -40,7 +42,8 @@ order by floor((yearid-1)/10)*10
 select no_of_schools, concat(decade+1,'-',decade+10) decade
 from number;
 ```
-As we can see above, the number of schools producing MLB players has generally increased over the decades, with a peak in the 1991-2000 decade. However, there is a noticeable drop in the 2011-2020 decade, because the data for this decade is incomplete.
+
+*Tab 1. Numbers of school in each decade where players attended*
 
 | Number of Schools | Decade    |
 | ------------- | --------- |
@@ -61,32 +64,44 @@ As we can see above, the number of schools producing MLB players has generally i
 | 1076          | 2001-2010 |
 | 33            | 2011-2020 |
 
-*Numbers of school in each decade where players attended*
+As we can see above, the number of schools producing MLB players has generally increased over the decades, with a peak in the 1991-2000 decade. However, there is a noticeable drop in the 2011-2020 decade, because the data for this decade is incomplete.
 
-
-The second question I decided to answer was:
-*What are the top 5 schools that produced the most MLB players for the entire dataset?*.
+After that, I wanted to identify the top 3 schools that produced the most MLB players in each decade.
 
 ```sql
-select name_full school_name, count(playerid) no_of_players
+with top3 as(
+with number as(
+select schoolid, count(playerid) no_of_players , floor((yearid-1)/10)*10 decade
 from grads g
-inner join school_details sd on g.schoolID = sd.schoolID
-group by name_full
-order by count(playerid) desc
-limit 5;
+group by schoolid, floor((yearid-1)/10)*10
+order by floor((yearid-1)/10)*10, count(playerid) desc
+)
+select *,
+	rank() over (partition by decade order by no_of_players desc) ranking
+from number
+)
+select name_full school_name, no_of_players, concat(decade+1,'-',decade+10) decade
+from top3
+inner join school_details sd on top3.schoolid = sd.schoolID
+where ranking in (1,2,3)
+order by decade asc, no_of_players desc;
 ```
 
-The University of Texas at Austin leads with 107 players, closely followed by the University of Southern California with 105 players. Arizona State University also has a significant contribution with 101 players. These institutions have been particularly successful in nurturing talent that progresses to Major League Baseball.
+*Tab 2. Top school in each decade which produced the most MLB players*
 
-| School                       |   Number of Players|
-|:----------------------------------|----------------:|
-| University of Texas at Austin     |             107 |
-| University of Southern California |             105 |
-| Arizona State University          |             101 |
-| Stanford University               |              86 |
-| University of Michigan            |              76 |
 
-*Top 5 schools that produced the most MLB players for the entire dataset*
+
+
+
+
+
+
+Just to have more readable I needed to choose only the top 1 schol for each decade. Overall, the number of players from top schools has varied significantly over the decades, with some schools consistently producing a high number of MLB players. Schools like USC, Arizona State, and Miami have been prominent in multiple decades. Just to have 
+
+
+
+
+
 
 
 

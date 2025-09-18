@@ -41,14 +41,14 @@ group by schoolid, floor((yearid-1)/10)*10
 order by floor((yearid-1)/10)*10, count(playerid) desc
 )
 select *,
-	rank() over (partition by decade order by no_of_players desc) ranking
+	ROW_NUMBER() over (partition by decade order by no_of_players desc) ranking
 from number
-order by decade asc, no_of_players desc
 )
 select name_full school_name, no_of_players, concat(decade+1,'-',decade+10) decade
 from top3
 inner join school_details sd on top3.schoolid = sd.schoolID
-where ranking in (1,2,3);
+where ranking in (1,2,3)
+order by decade asc, no_of_players desc;
 
 ################################################################################################################################
 -- a) return the top 20% of teams in terms of average annual spending
