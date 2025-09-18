@@ -91,11 +91,6 @@ order by decade asc, no_of_players desc;
 
 
 
-
-
-
-
-
 Just to have more readable I needed to choose only the top 1 schol for each decade. Overall, the number of players from top schools has varied significantly over the decades, with some schools consistently producing a high number of MLB players. Schools like USC, Arizona State, and Miami have been prominent in multiple decades. Just to have 
 
 
