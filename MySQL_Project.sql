@@ -1,10 +1,10 @@
-select * from players;
+select * from players where birthyear is not null order by birthyear asc ;
 select * from salaries;
 select * from school_details;
 select * from schools order by yearid;
 
 ################################################################################################################################
-# a) in each deceade, how many schools were there that produced MLB players?
+-- a) in each deceade, how many schools were there that produced MLB players?
 CREATE TEMPORARY TABLE grads as
 with g as(
 SELECT playerid, schoolid, yearid,
@@ -24,7 +24,7 @@ order by floor((yearid-1)/10)*10
 select no_of_schools, concat(decade+1,'-',decade+10) decade
 from number;
 
-# b) what are the names of the top 5 schools that produced the most players?
+-- b) what are the names of the top 5 schools that produced the most players?
 select name_full school_name, count(playerid) no_of_players
 from grads g
 inner join school_details sd on g.schoolID = sd.schoolID
@@ -32,7 +32,7 @@ group by name_full
 order by count(playerid) desc
 limit 5;
 
-# c) for each decade, what were the names of the top 3 schools that produced the most players?
+-- c) for each decade, what were the names of the top 3 schools that produced the most players?
 with top3 as(
 with number as(
 select schoolid, count(playerid) no_of_players , floor((yearid-1)/10)*10 decade
@@ -51,7 +51,7 @@ inner join school_details sd on top3.schoolid = sd.schoolID
 where ranking in (1,2,3);
 
 ################################################################################################################################
-# a) return the top 20% of teams in terms of average annual spending
+-- a) return the top 20% of teams in terms of average annual spending
 with avg_annual_salaries as (
 with  annual_salaries as (
 select teamID, yearid, sum(salary) paid_salaries
@@ -67,7 +67,7 @@ select teamid, avg_annual_salaries
 from avg_annual_salaries
 where percentile = 1;
 
-# b) for each team show the cumulative sum of spending over the year
+-- b) for each team show the cumulative sum of spending over the year
 with aps as (
 select teamID, yearid, sum(salary) paid_salaries
 from salaries
@@ -78,7 +78,7 @@ select teamid, yearid, paid_salaries,
 from aps
 order by teamid, yearid;
 
-# c) return the first year that each team's cumulative spending surpassed 1 billion
+-- c) return the first year that each team's cumulative spending surpassed 1 billion
 with first as (
 with cps as (
 with aps as (
@@ -101,7 +101,7 @@ from first
 where cum_bilion = 1;
 
 ################################################################################################################################
-# a) for each player calculate their age at their first (debut) game, their last game and their career length (in years). Sort from longest career to shortest one.
+-- a) for each player calculate their age at their first (debut) game, their last game and their career length (in years). Sort from longest career to shortest one.
 select namegiven, cast(concat(birthyear,'-',birthmonth,'-',birthday) as date) birth, debut, finalgame,
 	TIMESTAMPDIFF(year, cast(concat(birthyear,'-',birthmonth,'-',birthday) as date), debut) debut_age,
 	TIMESTAMPDIFF(year, cast(concat(birthyear,'-',birthmonth,'-',birthday) as date), finalgame) final_age,
@@ -109,7 +109,7 @@ select namegiven, cast(concat(birthyear,'-',birthmonth,'-',birthday) as date) bi
 from players
 order by TIMESTAMPDIFF(year, debut, finalgame) desc;
 
-# b) what team did each player play on for their starting and ending years?
+-- b) what team did each player play on for their starting and ending years?
 with first_last as(
 with
 first as(
@@ -136,7 +136,7 @@ select yearid, teamid, playerid,
 from first_last
 order by playerid, yearid;
 
-# c)how many players started and ended on the same team and also played for over a decade?
+-- c)how many players started and ended on the same team and also played for over a decade?
 with
 first as(
 select yearid, teamid, playerid,
@@ -164,7 +164,7 @@ where
     AND first_team = last_team;
 
 ################################################################################################################################
-# a)which players have the same birthday?
+-- a)which players have the same birthday?
 with bd as (
 select namegiven, cast(concat(birthyear,'-',birthmonth,'-',birthday) as date) birth
 from players
@@ -177,7 +177,7 @@ inner join bd bd2 on bd1.birth = bd2.birth
 where bd1.namegiven < bd2.namegiven
 order by bd1.namegiven;
 
-# b)create a summary table that shows for each team, what percent of players bat right, left and both.
+-- b)create a summary table that shows for each team, what percent of players bat right, left and both.
 with 
 hand as(
 select teamid, bats, count(bats) over (PARTITION BY teamid, bats) how_many
@@ -193,7 +193,7 @@ group by teamid, bats
 select *, round(how_many/sum(how_many) over (PARTITION BY teamid),2) percent
 from many;
 
-# c)how have average height and weight as debut game changed over the years, and what's the decade-over-decade difference?
+-- c)how have average height and weight as debut game changed over the years, and what's the decade-over-decade difference?
 with
 year_diff as(
 select year(debut) debut, round(avg(weight)) avg_weight, round(avg(height)) avg_height
@@ -211,6 +211,3 @@ select *,
 	round(avg(avg_height) over (partition by decade)) decade_avg_height
 from decade
 order by debut asc;
-
-drop table(country_stats, customers, happiness_scores, happiness_scores_current, 
-inflation_rates, orders, products);
