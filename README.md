@@ -87,9 +87,9 @@ where ranking in (1,2,3)
 order by decade asc, no_of_players desc;
 ```
 
-*Tab 2. Top school in each decade which produced the most MLB players*
+![Top School For Each Decade](MySQL\Project\Images\top1 decade.png)
 
-![schools](Images/top1 decade.png)
+*Chart 1. Top school in each decade which produced the most MLB players*
 
 Just to have more readable I chose only the top school for each decade. Overall, the number of players from top schools has varied significantly over the decades, with some schools consistently producing a high number of MLB players. Schools like USC, Arizona State, and Miami have been prominent in multiple decades. Just to have 
 
