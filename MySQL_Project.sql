@@ -1,6 +1,7 @@
 select * from players where birthyear is not null order by birthyear asc ;
 select * from salaries;
 select * from school_details;
+select * from 
 select * from schools order by yearid;
 
 ################################################################################################################################
@@ -58,12 +59,12 @@ select teamID, yearid, sum(salary) paid_salaries
 from salaries
 group by yearid, teamid
 )
-select teamid, round(avg(paid_salaries),0) avg_annual_salaries, ntile(5) over (order by avg(paid_salaries) desc) percentile
+select teamid, format(round(avg(paid_salaries),0),"N") avg_annual_salaries, ntile(5) over (order by avg(paid_salaries) desc) percentile
 from annual_salaries
 group by teamid
 order by round(avg(paid_salaries),0) desc
 )
-select teamid, avg_annual_salaries
+select teamid, concat(avg_annual_salaries, " $") avg_annual_salaries
 from avg_annual_salaries
 where percentile = 1;
 
@@ -128,13 +129,14 @@ select * from first where period = 1
 union all
 select * from last where period = 1
 )
-select yearid, teamid, playerid,
+select concat(namefirst,' ',namelast) name, teamid,
 	case
-    when ROW_NUMBER() over (partition by playerid order by yearid asc) = 1 then '1st Team'
-    when ROW_NUMBER() over (partition by playerid order by yearid asc) = 2 then 'Last Team'
+    when ROW_NUMBER() over (partition by p.playerid order by yearid asc) = 1 then '1st Team'
+    when ROW_NUMBER() over (partition by p.playerid order by yearid asc) = 2 then 'Last Team'
     end as teams
 from first_last
-order by playerid, yearid;
+inner join players p on first_last.playerid = p.playerid
+order by p.playerid, yearid;
 
 -- c)how many players started and ended on the same team and also played for over a decade?
 with
