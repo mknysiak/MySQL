@@ -43,7 +43,7 @@ select no_of_schools, concat(decade+1,'-',decade+10) decade
 from number;
 ```
 
-As we can see below, the number of schools producing MLB players has generally increased over the decades, with a peak in the 1991-2000 decade. However, there is a noticeable drop in the 2011-2020 decade, because the data for this decade is incomplete.
+As we can see below, the number of schools producing MLB players has generally increased over the decades, with a peak in the 1991-2000. However, there is a noticeable drop in the 2011-2020, because the data for this decade is incomplete.
 
 | Number of Schools | Decade    |
 | ------------- | --------- |
@@ -87,7 +87,7 @@ where ranking in (1,2,3)
 order by decade asc, no_of_players desc;
 ```
 
-Just to have more readable I chose only the top school for each decade. Overall, the number of players from top schools has varied significantly over the decades, with some schools consistently producing a high number of MLB players. Schools like USC, Arizona State, and Miami have been prominent in multiple decades. Just to have 
+Just to have the chart more readable, I chose only the top school for each decade. Overall, the number of players from top schools has varied significantly over the decades, with some schools consistently producing a high number of MLB players. Schools like USC, Arizona State, and Miami have been prominent in multiple decades.
 
 ![Top School For Each Decade](Images/top1_decade.png)
 *Chart 1. Top school in each decade which produced the most MLB players*
@@ -106,7 +106,8 @@ select teamID, yearid, sum(salary) paid_salaries
 from salaries
 group by yearid, teamid
 )
-select teamid, format(round(avg(paid_salaries),0),"N") avg_annual_salaries, ntile(5) over (order by avg(paid_salaries) desc) percentile
+select teamid, format(round(avg(paid_salaries),0),"N") avg_annual_salaries, 
+	ntile(5) over (order by avg(paid_salaries) desc) percentile
 from annual_salaries
 group by teamid
 order by round(avg(paid_salaries),0) desc
@@ -143,7 +144,8 @@ group by yearid, teamid
 )
 select teamid, yearid, paid_salaries,
 	sum(paid_salaries) over (partition by teamid order by yearid asc) cum_paid_salaries,
-	case when sum(paid_salaries) over (partition by teamid order by yearid asc) > 1000000000 then 1 else 0 end bilion
+	case 
+	when sum(paid_salaries) over (partition by teamid order by yearid asc) > 1000000000 then 1 else 0 end bilion
 from aps
 order by teamid, yearid
 )
@@ -284,5 +286,3 @@ The analysis of player physical characteristics over the decades reveals a gradu
 - Player handedness – exploration showed interesting connections to career and performance.
 
 ✅ Overall, this project demonstrated the power of SQL in extracting meaningful information from complex datasets and provided a deeper understanding of the dynamics within professional baseball.
-
-
